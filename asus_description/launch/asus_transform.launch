@@ -1,6 +1,6 @@
 <launch>
 
   <!-- Get TFs for asus into frame --> 
-  <node pkg="tf" type="static_transform_publisher" name="overhead_kinect_publisher" args="0.8 0 2 -1.57 0 3.14 world rgb_camera_link 100" /> 
+  <node pkg="tf" type="static_transform_publisher" name="overhead_kinect_publisher" args="0.8 0 1.94 -1.57 0 3.14 world rgb_camera_link 100" /> 
 
 </launch>
