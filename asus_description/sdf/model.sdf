@@ -46,7 +46,7 @@
             <visualize>true</visualize>
             <CxPrime>0</CxPrime>
             <alwaysOn>true</alwaysOn>
-            <updateRate>10.0</updateRate>
+            <updateRate>30.0</updateRate>
             <cameraName>asus</cameraName>
             <imageTopicName>/asus/rgb/image_raw</imageTopicName>
             <cameraInfoTopicName>/asus/rgb/camera_info</cameraInfoTopicName>
