@@ -1,0 +1,15 @@
+<package>
+  <description brief="tabletop_perception">
+
+     tabletop_perception
+
+  </description>
+  <author>Vivian Chu</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/tabletop_perception</url>
+  <depend package="roscpp"/>
+
+</package>
+
+
