@@ -1,14 +1,31 @@
 <package>
   <description brief="tabletop_perception">
 
-     tabletop_perception
+     tabletop_perception - pulled out components from the tabletop_pushing package
+     from Tucker Hermans
 
   </description>
+  <author>Tucker Hermans</author>
   <author>Vivian Chu</author>
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/tabletop_perception</url>
   <depend package="roscpp"/>
+  <depend package="roslib"/>
+  <depend package="pcl"/>
+  <depend package="pcl_ros"/>
+  <depend package="tf"/>
+  <depend package="actionlib"/>
+  <depend package="actionlib_msgs"/>
+  <depend package="cv_bridge"/>
+  <depend package="sensor_msgs"/>
+  <depend package="geometry_msgs"/>
+
+  <export>
+      <cpp cflags="-I${prefix}/include" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lpoint_cloud_segmentation -lshape_features" />
+  </export>
+
+  <rosdep name="opencv2"/>
 
 </package>
 

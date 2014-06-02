@@ -7,7 +7,13 @@ include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 #  Release        : w/o debug symbols, w/ optimization
 #  RelWithDebInfo : w/ debug symbols, w/ optimization
 #  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
-#set(ROS_BUILD_TYPE RelWithDebInfo)
+set(ROS_BUILD_TYPE RelWithDebInfo)
+
+# Build actions
+#rosbuild_find_ros_package(actionlib_msgs)
+#include(${actionlib_msgs_PACKAGE_PATH}/cmake/actionbuild.cmake)
+#genaction()
+
 
 rosbuild_init()
 
@@ -17,11 +23,59 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 #uncomment if you have defined messages
-#rosbuild_genmsg()
+rosbuild_genmsg()
 #uncomment if you have defined services
-#rosbuild_gensrv()
+rosbuild_gensrv()
+
+# Find external libraries
+find_package(OpenCV REQUIRED)
+rosbuild_add_boost_directories()
+
+rosbuild_add_library(graphcut include/tabletop_perception/extern/graphcut/graph.cpp include/tabletop_perception/extern/graphcut/maxflow.cpp include/tabletop_perception/extern/graphcut/LinkedBlockList.cpp include/tabletop_perception/extern/graphcut/GCoptimization.cpp)
+
+rosbuild_add_library(gmm include/tabletop_perception/extern/gmm/gmm.h include/tabletop_perception/extern/gmm/gmm.cpp)
+target_link_libraries(gmm ${OpenCV_LIBRARIES})
+rosbuild_link_boost(gmm filesystem)
 
 #common commands for building c++ executables and libraries
+
+rosbuild_add_library(point_cloud_segmentation include/tabletop_perception/point_cloud_segmentation.h src/point_cloud_segmentation.cpp)
+target_link_libraries(point_cloud_segmentation ${OpenCV_LIBRARIES})
+
+rosbuild_add_library(object_tracker_25d include/tabletop_perception/object_tracker_25d.h src/object_tracker_25d.cpp)
+target_link_libraries(object_tracker_25d ${OpenCV_LIBRARIES})
+
+rosbuild_add_library(shape_features include/tabletop_perception/shape_features.h src/shape_features.cpp)
+target_link_libraries(shape_features ${OpenCV_LIBRARIES})
+
+
+#rosbuild_add_executable(tabletop_pushing_perception_node src/tabletop_pushing_perception_node.cpp)
+rosbuild_add_executable(tabletop_perception_node src/tabletop_perception.cpp)
+target_link_libraries(tabletop_perception_node point_cloud_segmentation)
+target_link_libraries(tabletop_perception_node shape_features)
+target_link_libraries(tabletop_perception_node object_tracker_25d)
+target_link_libraries(tabletop_perception_node arm_obj_segmentation)
+target_link_libraries(tabletop_perception_node ${OpenCV_LIBRARIES})
+rosbuild_link_boost(tabletop_perception_node signals)
+
+rosbuild_add_library(arm_obj_segmentation include/tabletop_perception/arm_obj_segmentation.h src/arm_obj_segmentation.cpp)
+target_link_libraries(arm_obj_segmentation graphcut)
+target_link_libraries(arm_obj_segmentation gmm)
+target_link_libraries(arm_obj_segmentation ${OpenCV_LIBRARIES})
+
+
+# Not sure if we need these?
+#rosbuild_add_executable(extract_shape_features src/extract_shape_features.cpp)
+#target_link_libraries(extract_shape_features shape_features)
+
+
+#rosbuild_add_executable(compare_object_boundaries src/compare_object_boundaries.cpp)
+#target_link_libraries(compare_object_boundaries ${OpenCV_LIBRARIES})
+#target_link_libraries(compare_object_boundaries shape_features)
+#target_link_libraries(compare_object_boundaries point_cloud_segmentation)
+
+
+
 #rosbuild_add_library(${PROJECT_NAME} src/example.cpp)
 #target_link_libraries(${PROJECT_NAME} another_library)
 #rosbuild_add_boost_directories()
