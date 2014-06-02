@@ -1,4 +1,6 @@
 <launch>
+    <!-- Has not been modified to work with Curi yet - this is if you want to run this on the robot
+    and want to pipe the output to another display -->
 	<include file="$(find pr2_machine)/pr2.machine" />
 
 	<node pkg="pr2_camera_self_filter" type="run_xinit.py"  name="run_xinit" output="screen" machine="c2" >
