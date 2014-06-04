@@ -1,0 +1,13 @@
+<launch>
+
+  <!-- start up asus world --> 
+  <param name="/use_sim_time" value="true" />
+  <node name="gazebo" pkg="gazebo" type="gazebo" args="$(find asus_description)/worlds/asus.world" respawn="false"     />
+
+  <!-- start gui --> 
+  <node name="gazebo_gui" pkg="gazebo" type="gui" respawn="false" output="screen"/>
+
+  <!-- Get TFs for asus into frame --> 
+  <include file="$(find asus_description)/launch/asus_transform.launch" />
+
+</launch>
