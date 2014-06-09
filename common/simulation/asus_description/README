@@ -1,7 +1,0 @@
-Currently, the SDF for the model has been hand written.  The URDF files are just there for reference.
-
-To use symlink the sdf directory to .gazebo
-
-cd ./gazebo/models
-ln -s <ENTIRE PATH to SDF directory> asus_base
-
