@@ -1,4 +1,4 @@
 <launch>
-  <include file="$(find tabletop_pushing)/launch/push_learn_perception.launch" />
-  <include file="$(find tabletop_pushing)/launch/curi_camera_self_filter_asus_overhead.launch" />
+  <include file="$(find tabletop_perception)/launch/perception.launch" />
+  <include file="$(find tabletop_perception)/launch/curi_camera_self_filter_asus_overhead.launch" />
 </launch>

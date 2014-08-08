@@ -94,6 +94,6 @@
     <param name="boundary_hull_alpha" value="0.01" type="double"/>
     <param name="hull_gripper_spread" value="0.05" type="double"/>
 
-    <param name="arm_color_model_name" value="arm_color_model_1.bin" type="string"/>
+    <!--param name="arm_color_model_name" value="arm_color_model_1.bin" type="string"/-->
   </node>
 </launch>

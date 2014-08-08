@@ -214,6 +214,7 @@ class TabletopPerceptionNode
       num_position_failures_(0), footprint_count_(0),
       feedback_control_count_(0), feedback_control_instance_count_(0), open_loop_push_(false)
   {
+
     // Setup extra publishers
     fpcl_pub = n_.advertise<sensor_msgs::PointCloud2>("/asus_filtered",1);
     obj_pcl_pub = n_.advertise<sensor_msgs::PointCloud2>("/obj_only_points",1);
@@ -357,7 +358,7 @@ class TabletopPerceptionNode
     n_private_.param("use_random_shape_clusters", random_sd_clusters_, false);
 
 #ifdef DEBUG_POSE_ESTIMATION
-    pose_est_stream_.open("/u/thermans/data/new/pose_ests.txt");
+    //pose_est_stream_.open("/u/thermans/data/new/pose_ests.txt");
 #endif // DEBUG_POSE_ESTIMATION
 
     // Initialize classes requiring parameters
@@ -365,7 +366,9 @@ class TabletopPerceptionNode
     if (arm_color_model_name.length() > 0)
     {
       std::stringstream arm_color_model_path;
-      arm_color_model_path << ros::package::getPath("tabletop_pushing") << "/cfg/" << arm_color_model_name;
+      arm_color_model_path << ros::package::getPath("tabletop_perception") << "/cfg/" << arm_color_model_name;
+      std::cout << arm_color_model_path;
+      printf ("Got Here:");
       arm_obj_segmenter_->loadArmColorModel(arm_color_model_path.str());
     }
     obj_tracker_ = shared_ptr<ObjectTracker25D>(
@@ -1783,7 +1786,7 @@ class TabletopPerceptionNode
   {
     // Iterate through file name and shape pairs in db, compare to each
     std::stringstream shape_dynamics_db_path;
-    shape_dynamics_db_path << ros::package::getPath("tabletop_pushing") << shape_dynamics_db_base_path_
+    shape_dynamics_db_path << ros::package::getPath("tabletop_perception") << shape_dynamics_db_base_path_
                            << shape_dynamics_db_name_;
 
     ShapeDescriptor sd_feats;
@@ -1851,7 +1854,7 @@ class TabletopPerceptionNode
   std::vector<std::string> getBestRandomShapeMatch()
   {
     std::stringstream shape_dynamics_db_path;
-    shape_dynamics_db_path << ros::package::getPath("tabletop_pushing") << shape_dynamics_db_base_path_
+    shape_dynamics_db_path << ros::package::getPath("tabletop_perception") << shape_dynamics_db_base_path_
                            << shape_dynamics_db_name_;
 
     std::ifstream shape_file(shape_dynamics_db_path.str().c_str());
