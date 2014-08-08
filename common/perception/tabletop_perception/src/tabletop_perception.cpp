@@ -319,6 +319,14 @@ class TabletopPerceptionNode
     nan_point_.y = numeric_limits<float>::quiet_NaN();
     nan_point_.z = numeric_limits<float>::quiet_NaN();
 
+    // Setup nan point for self filtering of point cloud
+    rgb_nan_point_.x = numeric_limits<float>::quiet_NaN();
+    rgb_nan_point_.y = numeric_limits<float>::quiet_NaN();
+    rgb_nan_point_.z = numeric_limits<float>::quiet_NaN();
+    rgb_nan_point_.r = numeric_limits<float>::quiet_NaN();
+    rgb_nan_point_.g = numeric_limits<float>::quiet_NaN();
+    rgb_nan_point_.b = numeric_limits<float>::quiet_NaN();
+    
     n_private_.param("point_cloud_hist_res", point_cloud_hist_res_, 0.005);
     n_private_.param("boundary_hull_alpha", hull_alpha_, 0.01);
     n_private_.param("hull_gripper_spread", gripper_spread_, 0.05);
@@ -430,9 +438,11 @@ class TabletopPerceptionNode
         new_cloud_msg.is_dense = cloud_msg->is_dense;
 
         pcl::fromROSMsg(new_cloud_msg, cur_point_cloud_);
+        pcl::fromROSMsg(new_cloud_msg, rgb_cur_point_cloud_);
 
     } else {
         pcl::fromROSMsg(*cloud_msg, cur_point_cloud_);
+        pcl::fromROSMsg(*cloud_msg, rgb_cur_point_cloud_);
     }    
     // Give tf some time to initialize()
     //ros::Duration(5.0).sleep();
@@ -449,6 +459,7 @@ class TabletopPerceptionNode
     }
     
     pcl_ros::transformPointCloud(workspace_frame_, cur_point_cloud_, cur_point_cloud_, *tf_);
+    pcl_ros::transformPointCloud(workspace_frame_, rgb_cur_point_cloud_, rgb_cur_point_cloud_, *tf_);
 
 
     if (!camera_initialized_)
@@ -492,6 +503,7 @@ class TabletopPerceptionNode
 #endif
 
     pcl::copyPointCloud(cur_point_cloud_, cur_self_filtered_cloud_);
+    pcl::copyPointCloud(rgb_cur_point_cloud_, rgb_cur_self_filtered_cloud_);
     for (unsigned int r = 0; r < self_mask.rows; ++r)
     {
       for (unsigned int c = 0; c < self_mask.cols; ++c)
@@ -499,13 +511,14 @@ class TabletopPerceptionNode
         if (self_mask.at<uchar>(r, c) == 0)
         {
           cur_self_filtered_cloud_.at(c, r) = nan_point_;
+          rgb_cur_self_filtered_cloud_.at(c, r) = rgb_nan_point_;
         }
       }
     }
 
     // Let's publish the filtered point cloud!
     sensor_msgs::PointCloud2 testing_cloud_msg;
-    pcl::toROSMsg(cur_self_filtered_cloud_, testing_cloud_msg); 
+    pcl::toROSMsg(rgb_cur_self_filtered_cloud_, testing_cloud_msg); 
     fpcl_pub.publish(testing_cloud_msg);
 
     bool no_objects = false;
@@ -2663,6 +2676,8 @@ class TabletopPerceptionNode
   cv::Mat cur_self_mask_;
   cv::Mat morph_element_;
   XYZPointCloud cur_point_cloud_;
+  pcl::PointCloud<pcl::PointXYZRGB> rgb_cur_point_cloud_;
+  pcl::PointCloud<pcl::PointXYZRGB> rgb_cur_self_filtered_cloud_;
   XYZPointCloud cur_self_filtered_cloud_;
   XYZPointCloud cur_object_filtered_cloud_;
   shared_ptr<PointCloudSegmentation> pcl_segmenter_;
@@ -2743,6 +2758,7 @@ class TabletopPerceptionNode
   int feedback_control_count_;
   int feedback_control_instance_count_;
   pcl::PointXYZ nan_point_;
+  pcl::PointXYZRGB rgb_nan_point_;
   bool open_loop_push_;
 #ifdef DEBUG_POSE_ESTIMATION
   std::ofstream pose_est_stream_;
