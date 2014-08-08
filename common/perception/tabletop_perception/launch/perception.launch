@@ -2,14 +2,14 @@
   <!--param name="start_loc_use_fixed_goal" value="false" type="bool"/-->
   <param name="start_loc_use_fixed_goal" value="true" type="bool"/>
   <param name="use_graphcut_arm_seg" value="false" type="bool"/>
-  <arg name="offline" value="false"/>
+  <arg name="offline" value="true"/>
 
   <!-- TODO: need to change these to real asus topics later -->
-  <arg name="color_image_topic_name" value="/asus/rgb/image_raw" if="$(arg offline)"/>
-  <arg name="depth_image_topic_name" value="/asus/depth/image_raw"  if="$(arg offline)"/>
-  <arg name="mask_image_topic_name" value="/asus/rgb/image_raw/self_mask"  if="$(arg offline)"/>
-  <arg name="point_cloud_topic_name" value="/asus/depth_registered/points" if="$(arg offline)"/>
-  <arg name="camera_frame_name" value="rgb_camera_link"  if="$(arg offline)"/>
+  <arg name="color_image_topic_name" value="/camera/rgb/image_raw" if="$(arg offline)"/>
+  <arg name="depth_image_topic_name" value="/camera/depth/image_raw"  if="$(arg offline)"/>
+  <arg name="mask_image_topic_name" value="/camera/rgb/image_raw/self_mask"  if="$(arg offline)"/>
+  <arg name="point_cloud_topic_name" value="/camera/depth_registered/points" if="$(arg offline)"/>
+  <arg name="camera_frame_name" value="camera_rgb_frame"  if="$(arg offline)"/>
 
   <arg name="color_image_topic_name" value="/asus/rgb/image_raw" unless="$(arg offline)"/>
   <arg name="depth_image_topic_name" value="/asus/depth/image_raw" unless="$(arg offline)"/>
